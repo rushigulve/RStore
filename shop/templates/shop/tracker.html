@@ -1,0 +1,45 @@
+{% extends 'shop/basic.html' %}
+{% block title%} Checkout - My Awesome Cart{% endblock %}
+{% block body %}
+
+<div class="container">
+    <div class="col my-4">
+        <h2>Enter Details:</h2>
+        <form id="trackerform" method="post" action="/shop/tracker/">{% csrf_token %}
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="inputname">Order Id</label>
+                    <input name="orderId" type="id" class="form-control" id="orderId" placeholder="Order Id">
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="inputEmail4">Email</label>
+                    <input name="email" type="email" class="form-control" id="Email" placeholder="Email">
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">submit</button>
+        </form>
+    </div>
+    <div class="col my-4">
+        <h2>Your Order Status :</h2>
+        <div class="my-4">
+            <ul class="list-group" id="items">
+                Enter your order Id and Email and click Track Order to find details about your order!
+            </ul>
+            {% for i in update %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                {{i.update_desc}}
+                <span class="badge badge-primary badge-pill">{{i.timestamp}}</span>
+            </li>
+            {% endfor %}
+        </div>
+       
+    </div>
+</div>
+
+{% endblock %}
+{% block jss %}
+<script>
+    
+</script>
+
+{% endblock %}

@@ -1,0 +1,101 @@
+{% extends 'shop/basic.html' %}
+{% block title%} Checkout - My Awesome Cart{% endblock %}
+{% block body %}
+
+<div class="container">
+    <div class="col my-4">
+        <h2>Step 1 - My Awesome Cart Express Checkout - Review Your Cart Items</h2>
+        <div class='container'>
+            <ul class="list-group" id="items">
+                <li id='checkname' class="list-group-item d-flex justify-content-between align-items-center">
+                    <h4><b>Product</b></h4>
+                    <span id='checkqty'><b>Qty</b></span>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="container">
+        <b>Total Price- Rs</b><span id="total_price"></span>/-
+    </div>
+    <div class="col my-4">
+        <h2>Step 2 - Enter Address & Other Details:</h2>
+        <form method="post" action="/shop/checkout/">{% csrf_token %}
+            <div class="form-row">
+                <input name="amount" type="hidden" id="amount">
+                <div class="form-group col-md-6">
+                    <label for="inputname">Name</label>
+                    <input name="name" type="name" class="form-control" id="inputname" placeholder="Name">
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="inputEmail4">Email</label>
+                    <input name="email" type="email" class="form-control" id="inputEmail4" placeholder="Email">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputAddress">Address</label>
+                <input name="address" type="text" class="form-control" id="inputAddress" placeholder="1234 Main St">
+            </div>
+            <div class="form-group">
+                <label for="inputAddress2">Address line 2</label>
+                <input name="address2" type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor">
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="inputCity">City</label>
+                    <input name="city"type="text" class="form-control" id="inputCity">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="inputState">State</label>
+                    <input name="state" type="text" class="form-control" id="inputAddress2" placeholder="Enter State">
+                </div>
+                <div class="form-group col-md-2">
+                    <label for="inputZip">Zip</label>
+                    <input name="zip_code"type="text" class="form-control" id="inputZip">
+                </div>
+            </div>
+            <div class="form-group">
+                    <label for="inputZip">Phone Number</label>
+                    <input name="phone" type="tel" class="form-control" id="inputPhone">
+                </div>
+            <button type="submit" class="btn btn-primary">Place Order</button>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
+{% block jss %}
+<script>
+    if(localStorage.getItem('cart')!=null){
+        cart1=JSON.parse(localStorage.getItem('cart'));
+    }
+    else cart1={};
+    //console.log(cart1);
+    var sum=0;
+    for(var item in cart1){
+        let qty=cart1[item][0];
+        let name=cart1[item][1];
+        let price=cart1[item][2];
+        //console.log(name);
+        //console.log(qty);
+        mystr=`<li id='checkname' class="list-group-item d-flex justify-content-between align-items-center">
+                    ${name}
+                    <span id='checkqty' class="badge badge-primary badge-pill">${qty}</span>
+                </li>`
+        $('#items').append(mystr);
+        sum= sum+price*qty;
+        //console.log(sum)
+        //console.log(qty)
+        console.log(price)
+    }
+    console.log(sum)
+    document.getElementById("total_price").innerHTML=sum;
+    //$('#amount').val($('#total_price').html)
+    {% if thank %}
+    alert('Thankyou. Your order has been place. Track your order using tracking id:{{id}}');
+    localStorage.clear();
+    document.location='/shop/';
+    {% endif %}
+    $('#amount').val(sum)
+</script>
+
+{% endblock %}
